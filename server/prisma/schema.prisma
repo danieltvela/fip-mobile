@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Roles that determine what a user may access. Only PRESS_TEAM members can
+/// reach the management panel; JOURNALISTS are the accounts the panel creates.
+enum UserRole {
+  PRESS_TEAM
+  JOURNALIST
+}
+
+enum MaterialType {
+  PRESS_RELEASE
+  NOTE
+  PHOTOGRAPH
+  VIDEO
+  AUDIO
+}
+
+enum NotificationTypology {
+  BREAKING_NEWS
+  EVENT_REMINDER
+  NEW_MATERIAL
+  GENERAL
+}
+
+enum AudienceSegment {
+  ALL
+  JOURNALISTS
+  CONFIRMED_AGENDA
+}
+
+enum AgendaRequestStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  ACCEPTED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         UserRole @default(JOURNALIST)
+  createdAt    DateTime @default(now())
+
+  sentMessages Message[] @relation("MessageAuthor")
+}
+
+model PressMaterial {
+  id        String       @id @default(cuid())
+  title     String
+  type      MaterialType
+  topic     String
+  body      String
+  mediaUrl  String?
+  published Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([topic])
+}
+
+model Notification {
+  id        String               @id @default(cuid())
+  title     String
+  body      String
+  typology  NotificationTypology
+  segment   AudienceSegment
+  userId    String?
+  createdAt DateTime             @default(now())
+
+  @@index([createdAt])
+}
+
+model AgendaRequest {
+  id          String             @id @default(cuid())
+  journalistId String
+  eventId     String
+  eventTitle  String
+  note        String
+  status      AgendaRequestStatus @default(PENDING)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  subject   String
+  createdAt DateTime @default(now())
+  messages  Message[]
+}
+
+model Message {
+  id             String  @id @default(cuid())
+  conversationId String
+  authorId       String?
+  authorRole     String // "user" (journalist app side) or "press_team"
+  body           String
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  author       User?        @relation("MessageAuthor", fields: [authorId], references: [id])
+
+  @@index([conversationId, createdAt])
+}
