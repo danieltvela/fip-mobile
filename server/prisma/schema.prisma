@@ -1,0 +1,26 @@
+// Minimal Prisma subset required by issue #4 (journalist authentication + profile).
+// Issue #3 owns the full domain data model and will supersede/extend this schema.
+// Keep migrations reproducible: `prisma migrate deploy` against a local PostgreSQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// The login credential is the press-team-issued journalist credential number.
+// Only its scrypt hash is stored; the plaintext never leaves the request body.
+model Journalist {
+  id               String    @id @default(cuid())
+  credentialNumber String    @unique
+  credentialHash   String
+  name             String
+  outlet           String
+  role             String
+  refreshTokenHash String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
