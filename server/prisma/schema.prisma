@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MaterialType {
+  note
+  dossier
+  image
+  video
+  audio
+}
+
+enum MaterialTopic {
+  events
+  forums
+  agenda
+  institutional
+  other
+}
+
+/// Press room material published by the press office.
+model Material {
+  id        String        @id @default(cuid())
+  title     String
+  type      MaterialType
+  topic     MaterialTopic
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@map("materials")
+}

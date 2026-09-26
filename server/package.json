@@ -8,7 +8,8 @@
     "build": "nest build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@fip/shared": "workspace:*",
