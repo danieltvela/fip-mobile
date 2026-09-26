@@ -50,7 +50,7 @@ export default function AgendaRequestsPage() {
             </tr>
           ))}
           {(requests ?? []).length === 0 && (
-            <tr><td colSpan={4}>No agenda requests yet.</td></tr>
+            <tr><td colSpan={3}>No agenda requests yet.</td></tr>
           )}
         </tbody>
       </table>
