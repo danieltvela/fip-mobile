@@ -1,7 +1,22 @@
 import type { GalleryRefDto, MediaItemDto } from '@fip/shared';
 
-export const API_BASE =
-  process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3311';
+/**
+ * Base URL of the FIP API. `EXPO_PUBLIC_API_URL` is required: Expo inlines
+ * `EXPO_PUBLIC_*` vars at bundle time, and localhost never resolves on a
+ * physical device — see doc/media-download-e2e.md for the dev setup.
+ */
+export const API_BASE = requiredApiBase();
+
+function requiredApiBase(): string {
+  const base = process.env.EXPO_PUBLIC_API_URL;
+  if (!base) {
+    throw new Error(
+      'EXPO_PUBLIC_API_URL is required. Start the app with it set, e.g. '
+        + 'EXPO_PUBLIC_API_URL=http://<LAN-IP>:3311 pnpm --filter @fip/app start',
+    );
+  }
+  return base.replace(/\/$/, '');
+}
 
 export function absoluteUrl(path: string): string {
   return path.startsWith('/') ? `${API_BASE}${path}` : path;

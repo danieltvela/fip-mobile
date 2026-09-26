@@ -56,7 +56,7 @@ export default function MediaDetailScreen() {
       <Stack.Screen options={{ title: item.title }} />
       {item.type === 'image' ? (
         <Image
-          source={{ uri: absoluteUrl(item.previewUrl) }}
+          source={{ uri: absoluteUrl(item.fullPreviewUrl) }}
           style={styles.preview}
           resizeMode="cover"
         />

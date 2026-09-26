@@ -61,6 +61,7 @@ describe(MediaService.name, () => {
     expect(dtos[0]).toMatchObject({
       id: 'recent',
       previewUrl: '/media/recent/preview',
+      fullPreviewUrl: '/media/recent/full-preview',
       downloadUrl: '/media/recent/download',
       publishedAt: '2026-09-15T18:00:00.000Z',
       editionId: null,

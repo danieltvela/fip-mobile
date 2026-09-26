@@ -9,6 +9,8 @@ export interface MediaItemDto {
   topic: string;
   /** Relative URL for the compact preview rendition. */
   previewUrl: string;
+  /** Relative URL for the full-quality rendition, used on detail screens. */
+  fullPreviewUrl: string;
   /** Relative URL for the full-quality download. */
   downloadUrl: string;
   mimeType: string;

@@ -85,6 +85,7 @@ export class MediaService {
       type: item.type,
       topic: item.topic,
       previewUrl: `/media/${item.id}/preview`,
+      fullPreviewUrl: `/media/${item.id}/full-preview`,
       downloadUrl: `/media/${item.id}/download`,
       mimeType: item.mimeType,
       sizeBytes: item.sizeBytes,

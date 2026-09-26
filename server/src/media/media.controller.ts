@@ -49,6 +49,19 @@ export class MediaController {
     });
   }
 
+  /// Full-quality rendition served inline for the detail-screen preview.
+  @Get(':id/full-preview')
+  @Header('Cache-Control', 'public, max-age=86400')
+  @ApiProduces('image/*')
+  async fullPreview(@Param('id') id: string): Promise<StreamableFile> {
+    const item = await this.media.getRaw(id);
+    const { stream, size } = await this.media.open(item.originalKey);
+    return new StreamableFile(stream as Readable, {
+      type: item.mimeType,
+      length: size,
+    });
+  }
+
   /// Full-quality rendition; this is what the app downloads.
   @Get(':id/download')
   async download(@Param('id') id: string): Promise<StreamableFile> {
