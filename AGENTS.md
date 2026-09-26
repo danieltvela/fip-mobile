@@ -28,6 +28,7 @@ Prereqs: Node >= 22, pnpm (installed via npm; v12 uses `allowBuilds` in `pnpm-wo
 - `pnpm lint` / `pnpm typecheck` / `pnpm test` / `pnpm build` / `pnpm dev` — all orchestrated by Turborepo across the 4 packages. `pnpm test`/`build` are currently green; run `pnpm lint && pnpm typecheck && pnpm test && pnpm build` before finishing any change (same order CI uses).
 - Tests run with `--passWithNoTests` everywhere until real suites exist.
 - `server` boots standalone via `node server/dist/main.js` (prints Nest startup logs); port from `PORT` env, default 3000.
+- `pnpm --filter @fip/server run db:migrate:dev -- --name <change>` creates a Prisma migration; `db:migrate:deploy` replays all migrations in a clean environment. Copy `server/.env.example` to `server/.env` for the local `DATABASE_URL`.
 - `admin` (Next.js) writes `.next/`, `server` builds to `dist/`, `shared` compiles to `dist/` via `tsc`.
 - `app` (Expo) has no `build` task in turbo; dev happens with `pnpm --filter @fip/app start` (interactive).
 

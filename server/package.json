@@ -8,7 +8,9 @@
     "build": "nest build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev"
   },
   "dependencies": {
     "@fip/shared": "workspace:*",
