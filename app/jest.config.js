@@ -1,8 +1,9 @@
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
   preset: 'jest-expo',
-  transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)',
-  ],
-  roots: ['<rootDir>/src'],
+  // pnpm nests every dep in node_modules/.pnpm/<pkg>@<ver>/node_modules/<pkg>,
+  // which defeats the standard RN transformIgnorePatterns lookahead. Transform
+  // everything instead: jest-expo's babel handles node_modules fine.
+  transformIgnorePatterns: [],
+  roots: ['<rootDir>/lib'],
 };
