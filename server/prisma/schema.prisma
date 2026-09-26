@@ -1,0 +1,71 @@
+// Minimal Prisma subset required by issue #12 (agenda requests + notifications).
+// Issue #3 owns the full domain data model and will supersede/extend this schema.
+// Keep migrations reproducible: `prisma migrate dev` against a local PostgreSQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AgendaRequestKind {
+  INTERVIEW
+  MEETING
+  SHOOTING_SLOT
+  EVENT
+}
+
+enum AgendaRequestStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+enum NotificationTypology {
+  PRESS_NOTE
+  AGENDA_CHANGE
+  INTERVIEW
+  PRIVATE_COMMUNICATION
+  INCIDENT
+}
+
+model User {
+  id             String           @id @default(cuid())
+  email          String           @unique
+  name           String
+  createdAt      DateTime         @default(now())
+  agendaRequests AgendaRequest[]
+  notifications  Notification[]
+}
+
+model AgendaRequest {
+  id           String            @id @default(cuid())
+  kind         AgendaRequestKind
+  status       AgendaRequestStatus @default(PENDING)
+  scheduledAt  DateTime
+  notes        String?
+  durationMinutes Int               @default(30)
+  journalistId String
+  journalist   User              @relation(fields: [journalistId], references: [id])
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@index([journalistId])
+}
+
+model Notification {
+  id        String              @id @default(cuid())
+  typology  NotificationTypology
+  title     String
+  body      String
+  data      Json?
+  userId    String
+  user      User                @relation(fields: [userId], references: [id])
+  readAt    DateTime?
+  createdAt DateTime            @default(now())
+
+  @@index([userId])
+}
