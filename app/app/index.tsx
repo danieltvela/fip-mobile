@@ -1,11 +1,5 @@
-import { View, Text } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { Redirect } from 'expo-router';
 
-export default function HomeScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>FIP Press</Text>
-      <StatusBar />
-    </View>
-  );
+export default function Index() {
+  return <Redirect href="/(tabs)/press" />;
 }
