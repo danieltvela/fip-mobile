@@ -41,7 +41,8 @@ function makePrismaMock() {
 }
 
 describe('AgendaService', () => {
-  const user = { id: 'journalist-1', email: 'j@example.com', name: 'Jour' };
+  const user = { id: 'journalist-1', email: 'j@example.com', name: 'Jour', role: 'JOURNALIST' as const };
+  const press = { id: 'press-1', email: 'press@fip.org', name: 'Press Desk', role: 'PRESS' as const };
 
   function makeService(prisma = makePrismaMock()) {
     return { service: new AgendaService(prisma as never), prisma };
@@ -75,7 +76,7 @@ describe('AgendaService', () => {
   it('confirms a pending request and notifies the journalist with interview typology', async () => {
     const { service, prisma } = makeService();
     prisma.requests.push({ id: 'req-1', journalistId: 'journalist-1', kind: 'INTERVIEW', status: 'PENDING' });
-    const updated = await service.updateStatus('req-1', 'CONFIRMED');
+    const updated = await service.updateStatus(press, 'req-1', 'CONFIRMED');
     expect(updated!.status).toBe('CONFIRMED');
     expect(prisma.notifications).toHaveLength(1);
     expect(prisma.notifications[0]).toMatchObject({
@@ -88,14 +89,24 @@ describe('AgendaService', () => {
   it('notifies with agenda-change typology for non-interview kinds', async () => {
     const { service, prisma } = makeService();
     prisma.requests.push({ id: 'req-2', journalistId: 'journalist-1', kind: 'MEETING', status: 'PENDING' });
-    await service.updateStatus('req-2', 'CONFIRMED');
+    await service.updateStatus(press, 'req-2', 'CONFIRMED');
     expect(prisma.notifications[0].typology).toBe('AGENDA_CHANGE');
+  });
+
+  it('forbids journalists (even the request owner) from changing statuses', async () => {
+    const { service, prisma } = makeService();
+    prisma.requests.push({ id: 'req-3', journalistId: 'journalist-1', kind: 'INTERVIEW', status: 'PENDING' });
+    await expect(service.updateStatus(user, 'req-3', 'CONFIRMED')).rejects.toMatchObject({
+      status: 403,
+    });
+    expect(prisma.agendaRequest.update).not.toHaveBeenCalled();
+    expect(prisma.notifications).toHaveLength(0);
   });
 
   it('rejects invalid transitions without notifying anyone', async () => {
     const { service, prisma } = makeService();
     prisma.requests.push({ id: 'req-1', journalistId: 'journalist-1', kind: 'INTERVIEW', status: 'REJECTED' });
-    await expect(service.updateStatus('req-1', 'CONFIRMED')).rejects.toThrow(
+    await expect(service.updateStatus(press, 'req-1', 'CONFIRMED')).rejects.toThrow(
       'Cannot transition agenda request from REJECTED to CONFIRMED',
     );
     expect(prisma.agendaRequest.update).not.toHaveBeenCalled();
@@ -104,7 +115,7 @@ describe('AgendaService', () => {
 
   it('returns null for an unknown request without notifying', async () => {
     const { service, prisma } = makeService();
-    await expect(service.updateStatus('missing', 'CONFIRMED')).resolves.toBeNull();
+    await expect(service.updateStatus(press, 'missing', 'CONFIRMED')).resolves.toBeNull();
     expect(prisma.notifications).toHaveLength(0);
   });
 });

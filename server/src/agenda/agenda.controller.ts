@@ -36,9 +36,13 @@ export class AgendaController {
   }
 
   @Patch(':id/status')
-  async updateStatus(@Param('id') id: string, @Body() dto: UpdateAgendaRequestStatusDto) {
+  async updateStatus(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+    @Body() dto: UpdateAgendaRequestStatusDto,
+  ) {
     try {
-      const updated = await this.agendaService.updateStatus(id, dto.status);
+      const updated = await this.agendaService.updateStatus(user, id, dto.status);
       if (!updated) {
         throw new NotFoundException(`Agenda request ${id} not found`);
       }

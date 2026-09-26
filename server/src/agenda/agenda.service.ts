@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthenticatedUser } from '../auth/jwt.strategy';
 import { CreateAgendaRequestDto } from './dto/create-agenda-request.dto';
@@ -46,7 +46,14 @@ export class AgendaService {
     });
   }
 
-  async updateStatus(id: string, status: Exclude<AgendaRequestStatus, 'PENDING'>) {
+  /**
+   * Only the press team may change a request status. Journalists (including the
+   * request owner) can create and list requests but never transition statuses.
+   */
+  async updateStatus(actor: AuthenticatedUser, id: string, status: Exclude<AgendaRequestStatus, 'PENDING'>) {
+    if (actor.role !== 'PRESS') {
+      throw new ForbiddenException('Only the press team can change request statuses');
+    }
     const request = await this.prisma.agendaRequest.findUnique({ where: { id } });
     if (!request) {
       return null;

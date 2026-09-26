@@ -32,10 +32,16 @@ enum NotificationTypology {
   INCIDENT
 }
 
+enum UserRole {
+  PRESS
+  JOURNALIST
+}
+
 model User {
   id             String           @id @default(cuid())
   email          String           @unique
   name           String
+  role           UserRole         @default(JOURNALIST)
   createdAt      DateTime         @default(now())
   agendaRequests AgendaRequest[]
   notifications  Notification[]
