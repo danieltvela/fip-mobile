@@ -227,6 +227,12 @@ importers:
       expo:
         specifier: ~54.0.0
         version: 54.0.37(@babel/core@7.29.7(supports-color@8.1.1))(@expo/metro-runtime@6.1.2)(expo-router@6.0.24)(react-native@0.81.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@18.3.1)(supports-color@8.1.1))(react@18.3.1)(supports-color@8.1.1)(typescript@5.9.3)
+      expo-file-system:
+        specifier: ^19.0.24
+        version: 19.0.24(expo@54.0.37)(react-native@0.81.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@18.3.1)(supports-color@8.1.1))
+      expo-media-library:
+        specifier: ^18.2.1
+        version: 18.2.1(expo@54.0.37)(react-native@0.81.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@18.3.1)(supports-color@8.1.1))
       expo-notifications:
         specifier: ~0.32.0
         version: 0.32.17(expo@54.0.37)(react-native@0.81.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@18.3.1)(supports-color@8.1.1))(react@18.3.1)(supports-color@8.1.1)(typescript@5.9.3)
@@ -3810,6 +3816,12 @@ packages:
     resolution: {integrity: sha512-FpXeIpFgZuxihwT9lBo86YD3y6LphBuAhN680MMxm/Y7fmsc57vimn2d3vFu68VI0+Z9w457t494mu2wvlgWTQ==}
     peerDependencies:
       react: '*'
+      react-native: '*'
+
+  expo-media-library@18.2.1:
+    resolution: {integrity: sha512-dV1acx6Aseu+I5hmF61wY8UkD4vdt8d7YXHDfgNp6ZSs06qxayUxgrBsiG2eigLe54VLm3ycbFBbWi31lhfsCA==}
+    peerDependencies:
+      expo: '*'
       react-native: '*'
 
   expo-modules-autolinking@3.0.27:
@@ -9571,7 +9583,7 @@ snapshots:
       '@urql/core': 5.2.0
       wonka: 6.3.6
 
-  '@vitest/mocker@5.0.2(vite@8.3.1(@types/node@24.13.6)(jiti@2.7.0))':
+  '@vitest/mocker@5.0.2(vite@8.3.1(@types/node@24.13.6)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@vitest/spy': 5.0.2
@@ -10702,6 +10714,11 @@ snapshots:
     transitivePeerDependencies:
       - expo
       - supports-color
+
+  expo-media-library@18.2.1(expo@54.0.37)(react-native@0.81.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@18.3.1)(supports-color@8.1.1)):
+    dependencies:
+      expo: 54.0.37(@babel/core@7.29.7(supports-color@8.1.1))(@expo/metro-runtime@6.1.2)(expo-router@6.0.24)(react-native@0.81.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@18.3.1)(supports-color@8.1.1))(react@18.3.1)(supports-color@8.1.1)(typescript@5.9.3)
+      react-native: 0.81.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@18.3.1)(supports-color@8.1.1)
 
   expo-modules-autolinking@3.0.27:
     dependencies:
@@ -14055,7 +14072,7 @@ snapshots:
   vitest@5.0.2(@types/node@24.13.6)(jsdom@20.0.3(supports-color@8.1.1))(vite@8.3.1(@types/node@24.13.6)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.2(vite@8.3.1(@types/node@24.13.6)(jiti@2.7.0))
+      '@vitest/mocker': 5.0.2(vite@8.3.1(@types/node@24.13.6)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
