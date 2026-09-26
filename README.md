@@ -36,6 +36,13 @@ pnpm format           # Prettier
 
 Docker Compose brings up PostgreSQL, MinIO (S3-compatible media storage) and the API server. Push notifications go out through `expo-server-sdk` directly to APNs/FCM using the owner's Apple Developer and Google Play credentials.
 
+## Server configuration
+
+- `DATABASE_URL` — PostgreSQL connection string (`server/prisma/migrations` holds the schema; apply with `prisma migrate deploy`).
+- `JWT_SECRET` — required, at least 16 characters; the server refuses to boot without it.
+- `PORT` — HTTP port (default 3000).
+- Journalist profiles are seeded with `node server/prisma/seed.mjs` (demo press credentials via Prisma upsert). Journalists log into the app with the press-team-issued credential number — a unique 16-digit VISA/MasterCard-format number (Luhn-validated client-side before submission and server-side against a scrypt hash).
+
 ## Work status
 
 Work items are tracked as GitHub issues in `danieltvela/fip-mobile`. Repo conventions and stack decisions are documented in [`AGENTS.md`](AGENTS.md).
