@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+.next/
+.expo/
+.android/
+.ios/
+*.tsbuildinfo
+
+# expo / react-native
+*.log
+.pnpm-store/
+
+# env
+.env
+.env.*
+!.env.example
+
+# turbo
+.turbo/
+
+# editors / os
+.DS_Store
+.idea/

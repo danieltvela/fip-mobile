@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "FIP Press",
+    "slug": "fip-mobile",
+    "scheme": "fip",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "platforms": ["ios", "android"],
+    "plugins": ["expo-router", "expo-notifications"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
