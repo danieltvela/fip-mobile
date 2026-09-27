@@ -15,4 +15,14 @@ export default tseslint.config(
       '**/next-env.d.ts',
     ],
   },
+  {
+    files: ['**/*.mjs'],
+    languageOptions: {
+      globals: {
+        Buffer: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+  },
 );
