@@ -12,6 +12,17 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/*.config.{js,mjs}',
       '**/expo-env.d.ts',
+      '**/next-env.d.ts',
     ],
+  },
+  {
+    files: ['**/*.mjs'],
+    languageOptions: {
+      globals: {
+        Buffer: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
   },
 );
