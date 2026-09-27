@@ -1,6 +1,10 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    // CommonJS output so Node (NestJS server, Jest runners) can consume the
+    // package without ESM/CJS interop issues; bundlers (Metro, Next) handle CJS.
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "outDir": "dist",
     "rootDir": "src"
   },
