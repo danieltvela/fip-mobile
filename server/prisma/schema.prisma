@@ -1,3 +1,7 @@
+// Prisma schema: media gallery (issue #10) + agenda requests and notifications
+// (issue #12). Issue #3 owns the full domain data model and will supersede/extend it.
+// Keep migrations reproducible: `prisma migrate dev` against a local PostgreSQL.
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -16,36 +20,101 @@ enum MediaType {
 }
 
 model Edition {
-  id    String @id @default(cuid())
-  name  String @unique
+  id    String      @id @default(cuid())
+  name  String      @unique
   items MediaItem[]
 }
 
 model Event {
-  id    String @id @default(cuid())
-  name  String @unique
+  id    String      @id @default(cuid())
+  name  String      @unique
   items MediaItem[]
 }
 
 /// A piece of press material. Binary payloads live in blob storage
 /// (keyed by `previewKey` / `originalKey`); metadata lives here.
 model MediaItem {
-  id             String    @id @default(cuid())
-  title          String
-  type           MediaType
-  topic          String
+  id          String    @id @default(cuid())
+  title       String
+  type        MediaType
+  topic       String
   /// Compact rendition shown in list thumbnails and detail preview.
-  previewKey     String
+  previewKey  String
   /// Full-quality rendition exposed for download.
-  originalKey    String
-  mimeType       String
-  sizeBytes      Int
-  publishedAt    DateTime
-  editionId      String?
-  edition        Edition?  @relation(fields: [editionId], references: [id])
-  eventId        String?
-  event          Event?    @relation(fields: [eventId], references: [id])
-  createdAt      DateTime  @default(now())
+  originalKey String
+  mimeType    String
+  sizeBytes   Int
+  publishedAt DateTime
+  editionId   String?
+  edition     Edition?  @relation(fields: [editionId], references: [id])
+  eventId     String?
+  event       Event?    @relation(fields: [eventId], references: [id])
+  createdAt   DateTime  @default(now())
 
   @@index([publishedAt(sort: Desc)])
+}
+
+enum AgendaRequestKind {
+  INTERVIEW
+  MEETING
+  SHOOTING_SLOT
+  EVENT
+}
+
+enum AgendaRequestStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+enum NotificationTypology {
+  PRESS_NOTE
+  AGENDA_CHANGE
+  INTERVIEW
+  PRIVATE_COMMUNICATION
+  INCIDENT
+}
+
+enum UserRole {
+  PRESS
+  JOURNALIST
+}
+
+model User {
+  id             String          @id @default(cuid())
+  email          String          @unique
+  name           String
+  role           UserRole        @default(JOURNALIST)
+  createdAt      DateTime        @default(now())
+  agendaRequests AgendaRequest[]
+  notifications  Notification[]
+}
+
+model AgendaRequest {
+  id              String              @id @default(cuid())
+  kind            AgendaRequestKind
+  status          AgendaRequestStatus @default(PENDING)
+  scheduledAt     DateTime
+  notes           String?
+  durationMinutes Int                 @default(30)
+  journalistId    String
+  journalist      User                @relation(fields: [journalistId], references: [id])
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([journalistId])
+}
+
+model Notification {
+  id        String               @id @default(cuid())
+  typology  NotificationTypology
+  title     String
+  body      String
+  data      Json?
+  userId    String
+  user      User                 @relation(fields: [userId], references: [id])
+  readAt    DateTime?
+  createdAt DateTime             @default(now())
+
+  @@index([userId])
 }

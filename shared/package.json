@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "type": "commonjs",
+  "type": "module",
+  "types": "./src/index.ts",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

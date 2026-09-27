@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { PressMaterialsModule } from './press/press-materials.module';
+import { AgendaModule } from './agenda/agenda.module';
 import { PrismaModule } from './prisma.module';
 import { MediaModule } from './media/media.module';
 import { AgendaModule } from './agenda/agenda.module';
 
 @Module({
-  imports: [PrismaModule, MediaModule, AgendaModule],
+  imports: [PrismaModule, AgendaModule, MediaModule, PressMaterialsModule],
 })
 export class AppModule {}

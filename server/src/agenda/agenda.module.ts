@@ -1,5 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AgendaController } from './agenda.controller.js';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from '../auth/jwt.strategy';
+import { AgendaController } from './agenda.controller';
+import { AgendaEventsController } from './agenda-events.controller';
+import { AgendaService } from './agenda.service';
 
-@Module({ controllers: [AgendaController] })
+@Module({
+  imports: [PassportModule],
+  controllers: [AgendaController, AgendaEventsController],
+  providers: [AgendaService, JwtStrategy],
+})
 export class AgendaModule {}
