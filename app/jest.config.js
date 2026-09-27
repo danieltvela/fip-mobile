@@ -4,5 +4,5 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!.*((jest-)?react-native|expo))',
   ],
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>'],
 };
