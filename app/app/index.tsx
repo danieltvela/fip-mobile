@@ -1,15 +1,20 @@
-import { Link } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>FIP Press</Text>
       <Link href="/agenda" asChild>
-        <Pressable style={styles.link}>
-          <Text style={styles.linkLabel}>Agenda</Text>
-        </Pressable>
+        <View style={styles.link}>
+          <Text style={styles.linkText}>Agenda</Text>
+        </View>
+      </Link>
+      <Link href="/gallery" asChild>
+        <View style={styles.link}>
+          <Text style={styles.linkText}>Media gallery</Text>
+        </View>
       </Link>
       <StatusBar />
     </View>
@@ -17,13 +22,8 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 24, fontWeight: '700', marginBottom: 16 },
-  link: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    backgroundColor: '#1d4ed8',
-  },
-  linkLabel: { color: '#fff', fontWeight: '600' },
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 },
+  title: { fontSize: 24, fontWeight: '700' },
+  link: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8, backgroundColor: '#1a3c8f' },
+  linkText: { color: '#fff', fontWeight: '600' },
 });

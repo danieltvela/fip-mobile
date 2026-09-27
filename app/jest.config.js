@@ -5,5 +5,5 @@ module.exports = {
   // which defeats the standard RN transformIgnorePatterns lookahead. Transform
   // everything instead: jest-expo's babel handles node_modules fine.
   transformIgnorePatterns: [],
-  roots: ['<rootDir>/lib'],
+  roots: ['<rootDir>'],
 };
