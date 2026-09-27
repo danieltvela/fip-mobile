@@ -6,6 +6,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>FIP Press</Text>
+      <Link href="/press">Press room</Link>
       <Link href="/credential" asChild>
         <View style={styles.link}>
           <Text style={styles.linkText}>My credential</Text>
