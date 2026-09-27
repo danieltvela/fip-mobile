@@ -1,6 +1,7 @@
 // Prisma schema: media gallery (issue #10) + agenda requests and notifications
 // (issue #12). Issue #3 owns the full domain data model and will supersede/extend it.
 // Keep migrations reproducible: `prisma migrate dev` against a local PostgreSQL.
+// The Material model below serves the press room smart search (issues #8, #9).
 
 generator client {
   provider = "prisma-client-js"
@@ -117,4 +118,31 @@ model Notification {
   createdAt DateTime             @default(now())
 
   @@index([userId])
+}
+
+enum MaterialType {
+  note
+  dossier
+  image
+  video
+  audio
+}
+
+enum MaterialTopic {
+  events
+  forums
+  agenda
+  institutional
+  other
+}
+
+/// Press room material published by the press office.
+model Material {
+  id        String        @id @default(cuid())
+  title     String
+  type      MaterialType
+  topic     MaterialTopic
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@map("materials")
 }
