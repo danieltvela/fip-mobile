@@ -1,12 +1,13 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Link } from 'expo-router';
+import { colors, typography } from '@/theme';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>FIP Press</Text>
-      <Link href="/(tabs)/press" asChild>
+      <Link href="/press" asChild>
         <View style={styles.link}>
           <Text style={styles.linkText}>Press room</Text>
         </View>
@@ -28,7 +29,12 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 },
-  title: { fontSize: 24, fontWeight: '700' },
-  link: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8, backgroundColor: '#1a3c8f' },
-  linkText: { color: '#fff', fontWeight: '600' },
+  title: { fontSize: typography.sizes.heading, fontWeight: '700' },
+  link: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: colors.primary,
+  },
+  linkText: { color: colors.textOnPrimary, fontWeight: '600' },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 
-import CredentialScreen from '../../app/credential';
+import CredentialScreen from '../../app/(tabs)/credential';
 
 describe('CredentialScreen activation gate', () => {
   it('hides the credential while it is not activated', () => {
