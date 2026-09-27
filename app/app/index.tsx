@@ -26,6 +26,11 @@ export default function HomeScreen() {
           <Text style={styles.linkText}>Credential</Text>
         </View>
       </Link>
+      <Link href="/notifications" asChild>
+        <View style={styles.link}>
+          <Text style={styles.linkText}>Notifications</Text>
+        </View>
+      </Link>
       <Link href="/gallery" asChild>
         <View style={styles.link}>
           <Text style={styles.linkText}>Media gallery</Text>
