@@ -1,15 +1,15 @@
 import { Test } from '@nestjs/testing';
 import { AGENDA_EVENTS } from '@fip/shared';
-import { AgendaController } from './agenda.controller';
+import { AgendaEventsController } from './agenda-events.controller';
 
-describe('AgendaController', () => {
-  let controller: AgendaController;
+describe('AgendaEventsController', () => {
+  let controller: AgendaEventsController;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      controllers: [AgendaController],
+      controllers: [AgendaEventsController],
     }).compile();
-    controller = moduleRef.get(AgendaController);
+    controller = moduleRef.get(AgendaEventsController);
   });
 
   it('lists all agenda events from shared seed data', () => {

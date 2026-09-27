@@ -3,7 +3,6 @@ import { PressMaterialsModule } from './press/press-materials.module';
 import { AgendaModule } from './agenda/agenda.module';
 import { PrismaModule } from './prisma.module';
 import { MediaModule } from './media/media.module';
-import { AgendaModule } from './agenda/agenda.module';
 
 @Module({
   imports: [PrismaModule, AgendaModule, MediaModule, PressMaterialsModule],
