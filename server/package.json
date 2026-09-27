@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests",
-    "db:migrate": "prisma migrate deploy",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
     "db:seed": "node prisma/seed.mjs"
   },
   "dependencies": {

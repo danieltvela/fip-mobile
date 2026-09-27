@@ -1,7 +1,10 @@
-// Prisma schema: media gallery (issue #10) + agenda requests and notifications
-// (issue #12). Issue #3 owns the full domain data model and will supersede/extend it.
-// Keep migrations reproducible: `prisma migrate dev` against a local PostgreSQL.
-// The Material model below serves the press room smart search (issues #8, #9).
+// FIP Communication and Press app — domain data model (issue #3).
+// Issue #3 owns the full model; Material additionally serves the press room
+// smart search (issues #8, #9, #10).
+// Every schema change must be accompanied by a migration created with
+// `pnpm --filter @fip/server exec prisma migrate dev --name <change>`
+// against a local PostgreSQL instance (DATABASE_URL in server/.env).
+// See server/prisma/README.md for the documented entity reference.
 
 generator client {
   provider = "prisma-client-js"
@@ -11,6 +14,135 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+/// Media organization a journalist works for.
+model Outlet {
+  id         String      @id @default(cuid())
+  name       String      @unique
+  website    String?
+  journalists Journalist[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@map("outlets")
+}
+
+/// A press professional with an associated outlet.
+model Journalist {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  fullName    String
+  phone       String?
+  outletId    String?
+  outlet      Outlet?  @relation(fields: [outletId], references: [id])
+  credentials Credential[]
+  messages    ContactMessage[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([outletId])
+  @@map("journalists")
+}
+
+/// Topic used to tag press materials.
+model Topic {
+  id        String         @id @default(cuid())
+  slug      String         @unique
+  name      String
+  materials PressMaterialTopic[]
+  createdAt DateTime       @default(now())
+
+  @@map("topics")
+}
+
+/// Press room material: note, dossier, image, video or audio.
+model PressMaterial {
+  id          String      @id @default(cuid())
+  title       String
+  kind        MaterialKind
+  body        String?     // Rich text for notes and dossiers.
+  mediaKey    String?     // MinIO object key; downloads use pre-signed URLs.
+  published   Boolean     @default(false)
+  publishedAt DateTime?
+  topics      PressMaterialTopic[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([kind, published])
+  @@map("press_materials")
+}
+
+/// Join table between press materials and topics.
+model PressMaterialTopic {
+  materialId String
+  topicId    String
+  material   PressMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  topic      Topic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([materialId, topicId])
+  @@map("press_material_topics")
+}
+
+/// Agenda entry. `parentId` chains sessions to their parent event.
+model AgendaItem {
+  id          String   @id @default(cuid())
+  parentId    String?
+  parent      AgendaItem?  @relation("AgendaItemSessions", fields: [parentId], references: [id])
+  sessions    AgendaItem[] @relation("AgendaItemSessions")
+  title       String
+  description String?
+  location    String?
+  startsAt    DateTime
+  endsAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([parentId])
+  @@index([startsAt])
+  @@map("agenda_items")
+}
+
+/// Digital press credential with a unique locator code.
+model Credential {
+  id          String   @id @default(cuid())
+  journalistId String
+  journalist  Journalist @relation(fields: [journalistId], references: [id])
+  /// Human-shareable unique locator shown as QR code.
+  locatorCode String   @unique
+  issuedAt    DateTime @default(now())
+  expiresAt   DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([journalistId])
+  @@map("credentials")
+}
+
+/// Chat-style message to the press office.
+model ContactMessage {
+  id           String   @id @default(cuid())
+  journalistId String
+  journalist   Journalist @relation(fields: [journalistId], references: [id])
+  /// Sent by the journalist when null; otherwise the staff display name.
+  authorStaffName String?
+  body         String
+  createdAt    DateTime @default(now())
+  readAt       DateTime?
+
+  @@index([journalistId, createdAt])
+  @@map("contact_messages")
+}
+
+enum MaterialKind {
+  NOTE
+  DOSSIER
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+// ── Media gallery models (issue #10, merged on main) ──────────────────────────
 
 enum MediaType {
   note
