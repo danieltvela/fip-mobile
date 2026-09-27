@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { AuthenticatedUser } from '../auth/jwt.strategy';
 import { CreateAgendaRequestDto } from './dto/create-agenda-request.dto';
 import { AgendaRequestStatus, assertValidTransition } from './request-status';
