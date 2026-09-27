@@ -1,4 +1,5 @@
 export * from './agenda';
+export * from './notifications';
 export * from './chat';
 // Foundation for issue #3 (domain data model) and generated API clients.
 export * from './press.js';
