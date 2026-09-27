@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { IsIn, IsOptional, IsString, MinLength, ValidateIf } from 'class-validator';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { Roles, RolesGuard } from '../common/roles.guard';
 import type { PublishNotificationDto } from '@fip/shared';
 

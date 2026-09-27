@@ -1,4 +1,6 @@
-/** Cross-package API contracts for the press team management panel (#17). */
+/** Cross-package API contracts for the FIP press platform. */
+
+export type { MediaItemDto, GalleryRefDto } from './media.js';
 
 export enum UserRole {
   PRESS_TEAM = 'PRESS_TEAM',

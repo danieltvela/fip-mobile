@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, U
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { IsBoolean, IsIn, IsOptional, IsString, IsUrl, MinLength } from 'class-validator';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { Roles, RolesGuard } from '../common/roles.guard';
 
 export const MATERIAL_TYPES = ['PRESS_RELEASE', 'NOTE', 'PHOTOGRAPH', 'VIDEO', 'AUDIO'] as const;

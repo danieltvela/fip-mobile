@@ -3,7 +3,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { IsEmail, IsIn, IsOptional, IsString, MinLength } from 'class-validator';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { Roles, RolesGuard } from '../common/roles.guard';
 import { hashPassword } from '../common/password';
 import { UserRole, type CreateJournalistDto } from '@fip/shared';

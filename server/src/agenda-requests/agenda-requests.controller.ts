@@ -2,7 +2,7 @@ import { Body, Controller, Get, NotFoundException, Param, Patch, UseGuards } fro
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { IsIn } from 'class-validator';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { Roles, RolesGuard } from '../common/roles.guard';
 import type { UpdateAgendaRequestStatusDto } from '@fip/shared';
 
