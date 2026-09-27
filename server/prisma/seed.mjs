@@ -92,6 +92,64 @@ async function putOpaque(keyPrefix, extension, mimeType, bytes) {
 
 const day = (n, hour) => new Date(`2026-09-${String(10 + n).padStart(2, '0')}T${hour}:00Z`);
 
+/**
+ * Demo journalist used by the notification center until the app ships a
+ * login flow (matches NotificationsService.DEMO_USER_EMAIL).
+ */
+async function seedNotifications(prisma) {
+  const user = await prisma.user.upsert({
+    where: { email: 'journalist@fip.example' },
+    update: {},
+    create: { email: 'journalist@fip.example', name: 'Ana Ruiz', role: 'JOURNALIST' },
+  });
+  await prisma.notification.deleteMany({ where: { userId: user.id } });
+
+  const hour = (n) => new Date(Date.now() - n * 60 * 60 * 1000);
+  const rows = [
+    {
+      typology: 'INCIDENT',
+      title: 'Incidence: press room access change',
+      body: 'Due to a security protocol, press room access moves to gate B until 14:00.',
+      createdAt: hour(1),
+    },
+    {
+      typology: 'INTERVIEW',
+      title: 'Interview confirmed: Minister of Transport',
+      body: 'Your interview request is confirmed for tomorrow at 10:30 in cabinet room 2.',
+      createdAt: hour(5),
+    },
+    {
+      typology: 'AGENDA_CHANGE',
+      title: 'Agenda change: press briefing moved',
+      body: 'The press briefing with FIP spokespersons moves from 09:30 to 12:00.',
+      createdAt: hour(26),
+    },
+    {
+      typology: 'PRESS_NOTE',
+      title: 'New press note: Forum conclusions',
+      body: 'The conclusions document of the Parallel Institutions Forum is now available.',
+      createdAt: hour(50),
+    },
+    {
+      typology: 'PRIVATE_COMMUNICATION',
+      title: 'Message from the press office',
+      body: 'The press office answered your message about accreditation for the gala.',
+      createdAt: hour(72),
+    },
+    {
+      typology: 'PRESS_NOTE',
+      title: 'New press note: Opening day highlights',
+      body: 'A summary with quotes and photos of the opening day has been published.',
+      createdAt: hour(96),
+      readAt: hour(90),
+    },
+  ];
+  for (const row of rows) {
+    await prisma.notification.create({ data: { ...row, userId: user.id } });
+  }
+  console.log(`Seeded ${rows.length} notifications for ${user.email}`);
+}
+
 async function main() {
   await prisma.mediaItem.deleteMany();
   await prisma.edition.deleteMany();
@@ -182,6 +240,8 @@ async function main() {
     await prisma.mediaItem.create({ data: row });
   }
   console.log(`Seeded ${rows.length} media items into ${storageRoot}`);
+
+  await seedNotifications(prisma);
 }
 
 main()
