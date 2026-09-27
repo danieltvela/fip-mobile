@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { randomBytes, randomUUID, scrypt as scryptCb, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { JwtPayload, jwtSecret } from './jwt.strategies';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import {
   JournalistProfile,
   LoginResponse,

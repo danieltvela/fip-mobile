@@ -1,7 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { AuthService, hashCredential } from './auth.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { LoginResponse } from '@fip/shared';
 
 const VALID_CREDENTIAL = '4000123456789017';
