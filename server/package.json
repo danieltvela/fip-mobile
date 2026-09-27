@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "db:migrate:deploy": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev"
+    "db:migrate:dev": "prisma migrate dev",
+    "db:seed": "node prisma/seed.mjs"
   },
   "dependencies": {
     "@fip/shared": "workspace:*",
@@ -36,5 +37,8 @@
     "jest": "^30.2.0",
     "prisma": "^6.16.2",
     "ts-jest": "^29.4.4"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
   }
 }

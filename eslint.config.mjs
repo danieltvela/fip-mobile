@@ -14,4 +14,14 @@ export default tseslint.config(
       '**/expo-env.d.ts',
     ],
   },
+  {
+    files: ['**/*.mjs'],
+    languageOptions: {
+      globals: {
+        Buffer: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+  },
 );

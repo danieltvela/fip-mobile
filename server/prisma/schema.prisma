@@ -191,3 +191,48 @@ enum NotificationTypology {
   PRIVATE_COMMUNICATION
   INCIDENT
 }
+
+// ── Media gallery models (issue #10, merged on main) ──────────────────────────
+
+enum MediaType {
+  note
+  dossier
+  image
+  video
+  audio
+}
+
+model Edition {
+  id    String @id @default(cuid())
+  name  String @unique
+  items MediaItem[]
+}
+
+model Event {
+  id    String @id @default(cuid())
+  name  String @unique
+  items MediaItem[]
+}
+
+/// A piece of press material. Binary payloads live in blob storage
+/// (keyed by `previewKey` / `originalKey`); metadata lives here.
+model MediaItem {
+  id             String    @id @default(cuid())
+  title          String
+  type           MediaType
+  topic          String
+  /// Compact rendition shown in list thumbnails and detail preview.
+  previewKey     String
+  /// Full-quality rendition exposed for download.
+  originalKey    String
+  mimeType       String
+  sizeBytes      Int
+  publishedAt    DateTime
+  editionId      String?
+  edition        Edition?  @relation(fields: [editionId], references: [id])
+  eventId        String?
+  event          Event?    @relation(fields: [eventId], references: [id])
+  createdAt      DateTime  @default(now())
+
+  @@index([publishedAt(sort: Desc)])
+}
