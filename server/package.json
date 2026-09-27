@@ -7,8 +7,11 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "lint": "eslint .",
+    "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "node prisma/seed.mjs"
   },
   "dependencies": {
     "@fip/shared": "workspace:*",
@@ -21,6 +24,8 @@
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/websockets": "^11.1.6",
     "@prisma/client": "^6.16.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
@@ -34,5 +39,8 @@
     "jest": "^30.2.0",
     "prisma": "^6.16.2",
     "ts-jest": "^29.4.4"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
   }
 }

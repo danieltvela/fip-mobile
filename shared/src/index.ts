@@ -1,2 +1,2 @@
 // Foundation for issue #3 (domain data model) and generated API clients.
-export {}
+export type { MediaItemDto, GalleryRefDto } from './media.js';
