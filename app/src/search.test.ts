@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { selectFilter, searchStateToQuery, setMode } from './search';
 
 describe('search state', () => {

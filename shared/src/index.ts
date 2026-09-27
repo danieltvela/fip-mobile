@@ -1,3 +1,6 @@
+// Foundation for issue #3 (domain data model) and generated API clients.
+export type { MediaItemDto, GalleryRefDto } from './media.js';
+
 // Domain model for the press room smart search (issues #8, #9).
 export const MATERIAL_TYPES = ['note', 'dossier', 'image', 'video', 'audio'] as const;
 export const MATERIAL_TOPICS = ['events', 'forums', 'agenda', 'institutional', 'other'] as const;
