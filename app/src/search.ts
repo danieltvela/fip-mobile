@@ -24,6 +24,3 @@ export function searchStateToQuery(state: SearchState): MaterialQuery {
   return { type: state.type, topic: state.topic };
 }
 
-export function hasActiveFilter(state: SearchState): boolean {
-  return state.type !== undefined || state.topic !== undefined;
-}
