@@ -6,7 +6,7 @@ export default function RootLayout() {
     <SessionProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="login" />
-        <Stack.Screen name="profile" />
+        <Stack.Screen name="(protected)" />
       </Stack>
     </SessionProvider>
   );

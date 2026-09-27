@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Link, Stack } from 'expo-router';
 import type { GalleryRefDto, MediaItemDto } from '@fip/shared';
-import { absoluteUrl, listGalleries, listMedia } from '../../lib/api';
+import { absoluteUrl, listGalleries, listMedia } from '../../../lib/api';
 
 const TYPE_LABEL: Record<string, string> = {
   note: 'Note',

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Redirect, Link, useRouter } from 'expo-router';
-import { apiLogout } from '../src/lib/api';
-import { useSession } from '../src/session/SessionContext';
+import { apiLogout } from '../../src/lib/api';
+import { useSession } from '../../src/session/SessionContext';
 
 /**
  * Journalist profile: name, outlet and role, plus logout. This route is

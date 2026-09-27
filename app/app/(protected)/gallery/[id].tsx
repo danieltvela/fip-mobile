@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import type { MediaItemDto } from '@fip/shared';
-import { absoluteUrl, getMedia } from '../../lib/api';
-import { downloadToDevice, type DownloadProgress } from '../../lib/download';
+import { absoluteUrl, getMedia } from '../../../lib/api';
+import { downloadToDevice, type DownloadProgress } from '../../../lib/download';
 
 const PHASE_MESSAGE: Record<DownloadProgress['phase'], string> = {
   idle: '',
