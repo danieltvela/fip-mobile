@@ -16,9 +16,14 @@ export default function HomeScreen() {
           <Text style={styles.linkText}>Press room search</Text>
         </View>
       </Link>
+      <Link href="/agenda" asChild>
+        <View style={styles.link}>
+          <Text style={styles.linkText}>Agenda</Text>
+        </View>
+      </Link>
       <Link href="/credential" asChild>
         <View style={styles.link}>
-          <Text style={styles.linkText}>My credential</Text>
+          <Text style={styles.linkText}>Credential</Text>
         </View>
       </Link>
       <Link href="/gallery" asChild>
