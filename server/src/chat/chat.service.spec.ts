@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { ChatGateway } from './chat.gateway';
+import { ChatDirectory } from './chat.directory';
 
 type MessageRow = {
   id: string;
@@ -43,6 +44,23 @@ function makePrismaMock(existing: MessageRow[] = []) {
   };
 }
 
+/**
+ * Directory mock bridging JWT subjects (User ids) to Journalist rows, exactly
+ * as the real ChatDirectory resolves them through the shared email.
+ */
+function makeDirectoryMock() {
+  return {
+    journalistIdForUser: jest.fn(async (user: { id: string; email: string }) => {
+      if (user.email === 'j@example.com') return 'jr-1';
+      throw new BadRequestException('Authenticated token is missing an email to resolve the journalist profile');
+    }),
+    userIdForJournalist: jest.fn(async (journalistId: string) => {
+      if (journalistId === 'jr-1') return 'user-1';
+      throw new BadRequestException('Journalist conversation not found');
+    }),
+  };
+}
+
 function makeGatewayMock() {
   return {
     emitMessage: jest.fn(),
@@ -51,48 +69,67 @@ function makeGatewayMock() {
 }
 
 describe('ChatService', () => {
-  const journalist = { id: 'journalist-1', email: 'j@example.com', name: 'Ana Ruiz', role: 'JOURNALIST' as const };
+  // The JWT subject is a User id and does NOT match the Journalist row id:
+  // this mirrors the live FK-mismatch regression reported by QA.
+  const journalist = { id: 'user-1', email: 'j@example.com', name: 'Ana Ruiz', role: 'JOURNALIST' as const };
   const press = { id: 'press-1', email: 'press@fip.org', name: 'Press Desk', role: 'PRESS' as const };
 
   function makeService(existing: MessageRow[] = [], gateway = makeGatewayMock()) {
     const prisma = makePrismaMock(existing);
+    const directory = makeDirectoryMock();
     return {
-      service: new ChatService(prisma as never, gateway as unknown as ChatGateway),
+      service: new ChatService(
+        prisma as never,
+        gateway as unknown as ChatGateway,
+        directory as unknown as ChatDirectory,
+      ),
       prisma,
       gateway,
+      directory,
     };
   }
 
-  it('a journalist posts into their own conversation without authorStaffName', async () => {
+  it('a journalist posts into their own Journalist conversation, not their User id', async () => {
     const { service, prisma, gateway } = makeService();
     const message = await service.send(journalist, { body: 'Is the dossier ready?' });
 
-    expect(message.journalistId).toBe('journalist-1');
+    expect(message.journalistId).toBe('jr-1');
     expect(message.authorRole).toBe('JOURNALIST');
     expect(message.authorStaffName).toBeNull();
     expect(prisma.contactMessage.create).toHaveBeenCalledWith({
-      data: { journalistId: 'journalist-1', body: 'Is the dossier ready?', authorStaffName: null },
+      data: { journalistId: 'jr-1', body: 'Is the dossier ready?', authorStaffName: null },
     });
     expect(gateway.emitMessage).toHaveBeenCalledWith(message);
     expect(prisma.notification.create).not.toHaveBeenCalled();
   });
 
-  it('the press team replies into the target conversation and notifies the journalist', async () => {
-    const { service, prisma, gateway } = makeService();
-    const message = await service.send(press, { journalistId: 'journalist-1', body: 'Yes, attached shortly.' });
+  it('the press team replies into the target conversation and notifies the journalist User', async () => {
+    const { service, prisma, gateway, directory } = makeService();
+    const message = await service.send(press, { journalistId: 'jr-1', body: 'Yes, attached shortly.' });
 
-    expect(message.journalistId).toBe('journalist-1');
+    expect(message.journalistId).toBe('jr-1');
     expect(message.authorRole).toBe('PRESS');
     expect(message.authorStaffName).toBe('Press Desk');
+    expect(directory.userIdForJournalist).toHaveBeenCalledWith('jr-1');
     expect(prisma.notification.create).toHaveBeenCalledTimes(1);
     const notification = prisma.notifications[0];
-    expect(notification.userId).toBe('journalist-1');
+    expect(notification.userId).toBe('user-1');
     expect(notification.typology).toBe('PRIVATE_COMMUNICATION');
     expect(gateway.emitMessage).toHaveBeenCalledWith(message);
     expect(gateway.emitNotification).toHaveBeenCalledWith(
-      'journalist-1',
+      'jr-1',
       expect.objectContaining({ title: 'New message from the press team', body: 'Yes, attached shortly.' }),
     );
+  });
+
+  it('rejects a press reply to an unknown journalist conversation', async () => {
+    const { service, prisma, gateway } = makeService();
+    await expect(service.send(press, { journalistId: 'jr-unknown', body: 'hello' })).rejects.toThrow(
+      BadRequestException,
+    );
+    expect(prisma.contactMessage.create).not.toHaveBeenCalled();
+    expect(prisma.notification.create).not.toHaveBeenCalled();
+    expect(gateway.emitMessage).not.toHaveBeenCalled();
   });
 
   it('rejects a press reply without a target journalist', async () => {
@@ -102,12 +139,13 @@ describe('ChatService', () => {
     expect(gateway.emitMessage).not.toHaveBeenCalled();
   });
 
-  it('journalists read their own history; the press team reads a targeted conversation', async () => {
-    const { service } = makeService([
-      { id: 'm1', journalistId: 'journalist-1', body: 'hi', authorStaffName: null, createdAt: new Date(0) },
+  it('journalists read their own history (resolved by email); the press team reads a targeted conversation', async () => {
+    const { service, directory } = makeService([
+      { id: 'm1', journalistId: 'jr-1', body: 'hi', authorStaffName: null, createdAt: new Date(0) },
     ]);
     expect((await service.list(journalist)).map((m) => m.id)).toEqual(['m1']);
-    expect((await service.list(press, 'journalist-1')).map((m) => m.id)).toEqual(['m1']);
+    expect(directory.journalistIdForUser).toHaveBeenCalledWith(journalist);
+    expect((await service.list(press, 'jr-1')).map((m) => m.id)).toEqual(['m1']);
     await expect(service.list(press)).rejects.toThrow(BadRequestException);
   });
 });
